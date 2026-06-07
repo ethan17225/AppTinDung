@@ -27,7 +27,7 @@ App Tín Dụng/
 ## Cấu hình Database
 Chuỗi kết nối nằm trong [backend/appsettings.json](backend/appsettings.json):
 ```
-server=localhost;port=3306;database=app_tindung;user=root;password=Hai@17022005;
+server=localhost;port=3306;database=app_tindung;user=root;password=123456789;
 ```
 Khi chạy backend lần đầu, hệ thống **tự động tạo database `app_tindung`** cùng toàn bộ bảng và tài khoản quản trị mặc định.
 
