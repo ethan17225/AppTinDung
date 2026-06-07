@@ -46,7 +46,14 @@
   opacity: .5;
 }
 .brand-top, .brand-mid, .brand-bottom { position: relative; z-index: 1; }
-.brand-mid { margin: 40px 0; }
+.brand-mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0 48px;
+  max-width: 460px;
+}
 
 .brand-logo {
   display: inline-flex;
@@ -69,24 +76,42 @@
 
 .brand-headline {
   font-family: var(--font-display);
-  font-size: clamp(28px, 3.4vw, 40px);
-  line-height: 1.1;
+  font-size: clamp(32px, 3.8vw, 46px);
+  line-height: 1.12;
   font-weight: 800;
-  letter-spacing: -.03em;
-  margin-bottom: 16px;
+  letter-spacing: -.035em;
+  margin: 0 0 28px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.brand-headline-line {
+  display: block;
+  color: #fff;
+}
+.brand-headline-accent {
+  display: block;
+  background: linear-gradient(120deg, #fff 0%, #d4f5eb 45%, #8fd4bf 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .brand-desc {
   color: rgba(255, 255, 255, 0.82);
   font-size: 15px;
+  line-height: 1.65;
   max-width: 420px;
+  margin: 0 0 8px;
 }
 
-.brand-feats { list-style: none; padding: 0; margin: 24px 0 0; }
+.brand-feats { list-style: none; padding: 0; margin: 32px 0 0; }
 .brand-feats li {
-  display: flex; align-items: center; gap: 10px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px; margin-bottom: 16px;
 }
+.brand-feats li:last-child { margin-bottom: 0; }
 .brand-feats .tick {
   width: 22px; height: 22px; border-radius: 7px;
   background: rgba(255, 255, 255, 0.14);
@@ -136,9 +161,11 @@
 
 /* ----- Man hinh trung binh: thu nho panel thuong hieu ----- */
 @media (max-width: 1080px) {
-  .auth-brand { padding: 36px 34px; }
-  .brand-mid { margin: 28px 0; }
+  .auth-brand { padding: 40px 36px; }
+  .brand-mid { padding: 24px 0 36px; }
   .brand-desc { font-size: 14px; }
+  .brand-headline { margin-bottom: 22px; }
+  .brand-feats { margin-top: 26px; }
 }
 
 /* ----- Mobile: an panel lon, hien thanh thu gon ----- */

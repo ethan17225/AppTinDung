@@ -15,7 +15,10 @@ import { Component } from '@angular/core';
       </div>
 
       <div class="brand-mid">
-        <h1 class="brand-headline">Quản lý tín dụng,<br>cho vay & thu hồi nợ</h1>
+        <h1 class="brand-headline">
+          <span class="brand-headline-line">Quản lý tín dụng,</span>
+          <span class="brand-headline-accent">cho vay & thu hồi nợ</span>
+        </h1>
         <p class="brand-desc">
           Nền tảng Core-Credit giúp số hóa quy trình cho vay: từ định danh khách hàng (KYC),
           khởi tạo hợp đồng, theo dõi điểm tín dụng CIC đến thu hồi nợ.
