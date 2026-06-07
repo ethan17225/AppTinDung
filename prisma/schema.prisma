@@ -1,0 +1,130 @@
+// App Tín Dụng - Lược đồ cơ sở dữ liệu (PostgreSQL)
+// Chuyển thể từ mô hình EF Core của backend ASP.NET Core sang Prisma.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Vai trò người dùng trong hệ thống
+enum VaiTro {
+  Admin
+  NhanVien
+  KhachHang
+}
+
+// Trạng thái của một hồ sơ vay (workflow)
+enum TrangThaiHopDong {
+  ChoDuyet
+  DaGiaiNgan
+  DangVay
+  TatToan
+  TuChoi
+}
+
+// Loại giao dịch tiền tệ
+enum LoaiGiaoDich {
+  GiaiNgan
+  ThuNo
+}
+
+// Tài khoản đăng nhập hệ thống
+model TaiKhoan {
+  id          Int      @id @default(autoincrement())
+  tenDangNhap String   @unique
+  email       String   @default("")
+  matKhauHash String
+  vaiTro      VaiTro   @default(KhachHang)
+  dangHoatDong Boolean @default(true)
+  ngayTao     DateTime @default(now())
+  maXacNhan   String?
+
+  khachHangId Int?
+  khachHang   KhachHang? @relation(fields: [khachHangId], references: [id])
+}
+
+// Thông tin định danh (KYC) của khách hàng vay
+model KhachHang {
+  id      Int      @id @default(autoincrement())
+  hoTen   String
+  email   String   @default("")
+  sdt     String   @default("")
+  diaChi  String   @default("")
+  cccd    String   @default("")
+  diemCIC Int      @default(650)
+  ngayTao DateTime @default(now())
+
+  hopDongs   HopDong[]
+  lichSuCICs LichSuCIC[]
+  taiKhoans  TaiKhoan[]
+}
+
+// Hồ sơ / hợp đồng vay
+model HopDong {
+  id          Int              @id @default(autoincrement())
+  khachHangId Int
+  khachHang   KhachHang        @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+  nhanVienId  Int?
+  hanMuc      Decimal          @db.Decimal(18, 2)
+  kyHanThang  Int
+  laiSuat     Decimal          @db.Decimal(9, 2)
+  mucDich     String           @default("")
+  trangThai   TrangThaiHopDong @default(ChoDuyet)
+  duNoConLai  Decimal          @default(0) @db.Decimal(18, 2)
+  ngayTao     DateTime         @default(now())
+  ngayGiaiNgan DateTime?
+
+  lichTras  LichTra[]
+  giaoDichs GiaoDich[]
+}
+
+// Lịch trả nợ theo từng kỳ
+model LichTra {
+  id            Int       @id @default(autoincrement())
+  hopDongId     Int
+  hopDong       HopDong   @relation(fields: [hopDongId], references: [id], onDelete: Cascade)
+  kyThu         Int
+  ngayDenHan    DateTime
+  soTienGoc     Decimal   @db.Decimal(18, 2)
+  soTienLai     Decimal   @db.Decimal(18, 2)
+  daThanhToan   Boolean   @default(false)
+  ngayThanhToan DateTime?
+  soLanTruDiem  Int       @default(0)
+}
+
+// Ghi nhận biến động tiền ra/vào của một hợp đồng
+model GiaoDich {
+  id           Int          @id @default(autoincrement())
+  hopDongId    Int
+  hopDong      HopDong      @relation(fields: [hopDongId], references: [id], onDelete: Cascade)
+  soTien       Decimal      @db.Decimal(18, 2)
+  thoiGian     DateTime     @default(now())
+  loaiGiaoDich LoaiGiaoDich
+  ghiChu       String       @default("")
+}
+
+// Lịch sử biến động điểm tín dụng CIC
+model LichSuCIC {
+  id          Int       @id @default(autoincrement())
+  khachHangId Int
+  khachHang   KhachHang @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+  diemCu      Int
+  diemMoi     Int
+  lyDo        String    @default("")
+  thoiGian    DateTime  @default(now())
+}
+
+// Lưu vết thao tác người dùng phục vụ kiểm toán
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  taiKhoanId    Int?
+  nguoiThucHien String   @default("")
+  hanhDong      String   @default("")
+  doiTuong      String   @default("")
+  chiTiet       String   @default("")
+  thoiGian      DateTime @default(now())
+}
